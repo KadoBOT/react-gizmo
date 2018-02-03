@@ -1,0 +1,9 @@
+{
+  "presets": [
+    ["env", {
+      "modules": false
+    }],
+    "react"
+  ],
+  "plugins": ["external-helpers", "transform-object-rest-spread", "transform-es2015-destructuring", "transform-es2015-parameters", "transform-class-properties"]
+}

@@ -2,9 +2,10 @@
   "name": "react-gizmo",
   "version": "0.0.2",
   "description": "React Gizmo - Finite State Machine for React",
-  "main": "index.js",
+  "main": "bundle.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c"
   },
   "repository": {
     "type": "git",
@@ -28,5 +29,15 @@
     "react": "^16.2.0",
     "react-broadcast": "^0.7.0-rc.3",
     "xstate": "^3.0.3"
+  },
+  "devDependencies": {
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-es2015-destructuring": "^6.23.0",
+    "babel-plugin-transform-es2015-parameters": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "rollup-plugin-babel": "^3.0.3"
   }
 }
