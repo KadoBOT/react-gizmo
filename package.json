@@ -1,0 +1,32 @@
+{
+  "name": "react-gizmo",
+  "version": "0.0.2",
+  "description": "React Gizmo - Finite State Machine for React",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/kadobot/react-gizmo.git"
+  },
+  "keywords": [
+    "react",
+    "finite machine",
+    "state machine",
+    "xstate",
+    "ui",
+    "state"
+  ],
+  "author": "KadoBOT",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kadobot/react-gizmo/issues"
+  },
+  "homepage": "https://github.com/kadobot/react-gizmo#readme",
+  "dependencies": {
+    "react": "^16.2.0",
+    "react-broadcast": "^0.7.0-rc.3",
+    "xstate": "^3.0.3"
+  }
+}
