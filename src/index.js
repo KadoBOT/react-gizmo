@@ -44,9 +44,9 @@ export class Machine extends React.Component {
     }
   }
 
-  transition = ({ on, to, off = '', data}) => {
-    console.log({on, to, flow: [...this.state.flow]})
-    let nextState = context.machine.transition(on, to)
+  transition = ({ on, to, off = '', data}, condition) => {
+    console.log({ on, to, data, condition })
+    let nextState = context.machine.transition(on, to, condition)
     const doAction = ({ route }) => {
       if(context.children.has(route) && this.state.flow.has(on)) {
         for (const action of nextState.actions) {
@@ -85,7 +85,7 @@ export class Machine extends React.Component {
 export class State extends React.Component {
   checkType = (fn, { transition, updateState, state }) => {
     let args = {
-      transition: (to, options) => transition({ on: this.props.on, to, ...options }),
+      transition: (to, options, cond) => transition({ on: this.props.on, to, ...options }, cond),
       updateState,
       ...state,
     }
