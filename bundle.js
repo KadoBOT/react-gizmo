@@ -104,34 +104,6 @@ var possibleConstructorReturn = function (self, call) {
   return call && (typeof call === "object" || typeof call === "function") ? call : self;
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-var toConsumableArray = function (arr) {
-  if (Array.isArray(arr)) {
-    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-
-    return arr2;
-  } else {
-    return Array.from(arr);
-  }
-};
-
 var Context = function () {
   function Context(flow) {
     classCallCheck(this, Context);
@@ -166,19 +138,18 @@ var Machine = function (_React$Component) {
 
     var _this = possibleConstructorReturn(this, (Machine.__proto__ || Object.getPrototypeOf(Machine)).call(this, props));
 
-    _this.transition = function (_ref) {
-      var on = _ref.on,
-          to = _ref.to,
+    _this.transition = function (_ref, condition, draftState) {
+      var to = _ref.to,
           _ref$off = _ref.off,
           off = _ref$off === undefined ? '' : _ref$off,
           data = _ref.data;
 
-      console.log({ on: on, to: to, flow: [].concat(toConsumableArray(_this.state.flow)) });
-      var nextState = context.machine.transition(on, to);
+      console.log({ on: _this.state.route, to: to, data: data, condition: condition });
+      var nextState = context.machine.transition(_this.state.route, to, condition);
       var doAction = function doAction(_ref2) {
         var route = _ref2.route;
 
-        if (context.children.has(route) && _this.state.flow.has(on)) {
+        if (context.children.has(route) && _this.state.flow.has(_this.state.route)) {
           var _iteratorNormalCompletion = true;
           var _didIteratorError = false;
           var _iteratorError = undefined;
@@ -206,7 +177,7 @@ var Machine = function (_React$Component) {
         }
       };
 
-      doAction({ route: on });
+      doAction({ route: _this.state.route });
 
       var filteredFlow = _this.state.flow.add(nextState.value);
 
@@ -236,16 +207,19 @@ var Machine = function (_React$Component) {
         }
       } else filteredFlow.delete(off);
 
-      _this.setState({
-        route: nextState.value,
-        flow: filteredFlow,
-        draftState: data
+      _this.setState(function (state) {
+        return {
+          route: nextState.value,
+          flow: filteredFlow,
+          state: _extends({}, state.state, data),
+          draftState: draftState
+        };
       }, function () {
         return doAction({ route: nextState.value });
       });
     };
 
-    _this.updateState = function () {
+    _this.publish = function () {
       return _this.setState(function (state) {
         return { state: _extends({}, state.state, state.draftState) };
       });
@@ -259,7 +233,7 @@ var Machine = function (_React$Component) {
       transition: _this.transition,
       state: _this.props.state.initialState,
       draftState: null,
-      updateState: _this.updateState
+      publish: _this.publish
     };
     return _this;
   }
@@ -341,10 +315,10 @@ var State = function (_React$Component2) {
         function (_ref4) {
           var flow = _ref4.flow,
               transition = _ref4.transition,
-              updateState = _ref4.updateState,
+              publish = _ref4.publish,
               state = _ref4.state;
 
-          var render = _this3.checkType(_this3.props.render, { transition: transition, state: state, updateState: updateState });
+          var render = _this3.checkType(_this3.props.render, { transition: transition, state: state, publish: publish });
           return flow.has(_this3.props.on) && render;
         }
       );
@@ -358,25 +332,25 @@ var _initialiseProps = function _initialiseProps() {
 
   this.checkType = function (fn, _ref5) {
     var _transition = _ref5.transition,
-        updateState = _ref5.updateState,
+        publish = _ref5.publish,
         state = _ref5.state;
 
     var args = _extends({
-      transition: function transition(to, options) {
-        return _transition(_extends({ on: _this4.props.on, to: to }, options));
+      transition: function transition(to, options, cond) {
+        return _transition(_extends({ to: to }, options), cond);
       },
-      updateState: updateState
+      publish: publish
     }, state);
-    var render = fn(state);
-    if (render.type && render.type.prototype.isReactComponent) {
-      args.ref = function (node) {
+    var render = _extends({}, fn(args));
+    if (render.type.prototype && render.type.prototype.isReactComponent) {
+      render.ref = function (node) {
         return context.setChild(node, _this4.props.on);
       };
     } else {
       console.warn('<State /> should not return stateless functions on render:', fn(args));
     }
 
-    return fn(args);
+    return render;
   };
 };
 

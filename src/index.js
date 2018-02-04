@@ -32,7 +32,7 @@ export class Machine extends React.Component {
       transition: this.transition,
       state: this.props.state.initialState,
       draftState: null,
-      updateState: this.updateState
+      publish: this.publish
     };
   }
 
@@ -44,32 +44,33 @@ export class Machine extends React.Component {
     }
   }
 
-  transition = ({ on, to, off = '', data}, condition) => {
-    console.log({ on, to, data, condition })
-    let nextState = context.machine.transition(on, to, condition)
+  transition = ({to, off = '', data}, condition, draftState) => {
+    console.log({ on: this.state.route, to, data, condition })
+    let nextState = context.machine.transition(this.state.route, to, condition)
     const doAction = ({ route }) => {
-      if(context.children.has(route) && this.state.flow.has(on)) {
+      if(context.children.has(route) && this.state.flow.has(this.state.route)) {
         for (const action of nextState.actions) {
           context.children.get(route)[action] && context.children.get(route)[action]()
         }
       }
     }
 
-    doAction({ route: on })
+    doAction({ route: this.state.route })
 
     let filteredFlow = this.state.flow.add(nextState.value)
 
     if(typeof off === 'object') for (const flow of off) filteredFlow.delete(flow)
     else filteredFlow.delete(off)
 
-    this.setState({
+    this.setState(state => ({
       route: nextState.value,
       flow: filteredFlow,
-      draftState: data
-    }, () => doAction({ route: nextState.value }))
+      state: { ...state.state, ...data },
+      draftState
+    }), () => doAction({ route: nextState.value }))
   }
 
-  updateState = () => this.setState(state => ({ state: {...state.state, ...state.draftState}}))
+  publish = () => this.setState(state => ({ state: {...state.state, ...state.draftState}}))
 
   render() {
     const { Provider } = context.data
@@ -83,20 +84,20 @@ export class Machine extends React.Component {
 }
 
 export class State extends React.Component {
-  checkType = (fn, { transition, updateState, state }) => {
+  checkType = (fn, { transition, publish, state }) => {
     let args = {
-      transition: (to, options, cond) => transition({ on: this.props.on, to, ...options }, cond),
-      updateState,
+      transition: (to, options, cond) => transition({to, ...options }, cond),
+      publish,
       ...state,
     }
-    const render = fn(state)
-    if(render.type && render.type.prototype.isReactComponent) {
-      args.ref = node => context.setChild(node, this.props.on)
+    const render = {...fn(args)}
+    if(render.type.prototype && render.type.prototype.isReactComponent) {
+      render.ref = node => context.setChild(node, this.props.on)
     } else {
       console.warn('<State /> should not return stateless functions on render:', fn(args))
     }
     
-    return fn(args)
+    return render
   }
 
   render() {
@@ -104,8 +105,8 @@ export class State extends React.Component {
     
     return (
       <Consumer>
-        {({flow, transition, updateState, state}) => {
-          const render = this.checkType(this.props.render, { transition, state, updateState })
+        {({flow, transition, publish, state}) => {
+          const render = this.checkType(this.props.render, { transition, state, publish })
           return flow.has(this.props.on) && render
         }}
       </Consumer>
