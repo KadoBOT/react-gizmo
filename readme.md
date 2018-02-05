@@ -58,11 +58,12 @@ ReactDOM.render(<MachineApp />, document.getElementById('root'));
 # API  
   
 ## &lt;Machine /&gt;  
-The &lt;Machine /&gt; wraps your App and is responsible for passing down the props to the &lt;State /&gt;. The &lt;Machine /&gt; should have only one children, similar to `react-router`. The `initialState` and `flow` are passed to the machine through the `state` prop.
-| Prop | Type | Description |
-| ------ | ---- | ----------- |
-| log    | bool | If true logs state transitions |
-| state  | object | The object containing the state machine and initial State: { initialState: any, flow: [statechart](http://davidkpiano.github.io/xstate/docs/#/) } |
+The &lt;Machine /&gt; wraps your App and is responsible for passing down the props to the &lt;State /&gt;. The &lt;Machine /&gt; should have only one children, similar to `react-router`. The `initialState` and `flow` are passed to the machine through the `state` prop.  
+  
+| Prop | Type | Description |  
+| ------ | ---- | ----------- |  
+| log    | bool | If true logs state transitions |  
+| state  | object | The object containing the state machine and initial State: { initialState: any, flow: [statechart](http://davidkpiano.github.io/xstate/docs/#/) } |  
 
 ## &lt;State /&gt;
 The &lt;State /&gt; represents the individual state of your flow. `on` prop is what glues the state to a specific flow state, and the `render` prop returns a function with the machine props. The `render` of &lt;State /&gt; must return a component. It's recommended that the `render` function returns Class based components since only Class based components can have it's methods called by the Machine on state transitions.  
