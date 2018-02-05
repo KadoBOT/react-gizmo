@@ -118,6 +118,17 @@ Your initialState/state, can be accessed directly via `props.YOUR_STATE_KEY`.
 console.log(this.props.text) // Hello
 ```
 
+# Todo
+- [ ] Connect state to Redux DevTools
+- [ ] Flow visualisation
+- [ ] Examples
+- [ ] Better integration with other State Managers like Redux and Mobx ie.
+- [ ] Tests
+
+# Thanks
+[David](https://twitter.com/DavidKPiano) the creator of [xstate](https://github.com/davidkpiano/xstate) who made this library possible and [Michele](https://twitter.com/MicheleBertoli) for inspiring me with [react-automata](https://github.com/MicheleBertoli/react-automata). Even if you  like `react-gizmo` I recommend you to give them a try. 
+Also, a big thanks to [Ryan Florence](https://twitter.com/ryanflorence) for giving a great talk about State Machine.
+
 
 
 
