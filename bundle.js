@@ -4,120 +4,35 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
+var _Set = _interopDefault(require('babel-runtime/core-js/set'));
+var _regeneratorRuntime = _interopDefault(require('babel-runtime/regenerator'));
+var _asyncToGenerator = _interopDefault(require('babel-runtime/helpers/asyncToGenerator'));
+var _extends = _interopDefault(require('babel-runtime/helpers/extends'));
+var _typeof = _interopDefault(require('babel-runtime/helpers/typeof'));
+var _getIterator = _interopDefault(require('babel-runtime/core-js/get-iterator'));
+var _Object$getPrototypeOf = _interopDefault(require('babel-runtime/core-js/object/get-prototype-of'));
+var _possibleConstructorReturn = _interopDefault(require('babel-runtime/helpers/possibleConstructorReturn'));
+var _inherits = _interopDefault(require('babel-runtime/helpers/inherits'));
+var _Map = _interopDefault(require('babel-runtime/core-js/map'));
+var _classCallCheck = _interopDefault(require('babel-runtime/helpers/classCallCheck'));
+var _createClass = _interopDefault(require('babel-runtime/helpers/createClass'));
 var React = _interopDefault(require('react'));
-var reactBroadcast = require('react-broadcast');
 var xstate = require('xstate');
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-  return typeof obj;
-} : function (obj) {
-  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-};
-
-
-
-
-
-
-
-
-
-
-
-var classCallCheck = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-};
-
-var createClass = function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-}();
-
-
-
-
-
-
-
-var _extends = Object.assign || function (target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i];
-
-    for (var key in source) {
-      if (Object.prototype.hasOwnProperty.call(source, key)) {
-        target[key] = source[key];
-      }
-    }
-  }
-
-  return target;
-};
-
-
-
-var inherits = function (subClass, superClass) {
-  if (typeof superClass !== "function" && superClass !== null) {
-    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
-  }
-
-  subClass.prototype = Object.create(superClass && superClass.prototype, {
-    constructor: {
-      value: subClass,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    }
-  });
-  if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
-};
-
-
-
-
-
-
-
-
-
-
-
-var possibleConstructorReturn = function (self, call) {
-  if (!self) {
-    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-  }
-
-  return call && (typeof call === "object" || typeof call === "function") ? call : self;
-};
 
 var Context = function () {
   function Context(flow) {
-    classCallCheck(this, Context);
+    _classCallCheck(this, Context);
 
     this.machine = null;
     this.data = null;
-    this.children = new Map();
+    this.children = new _Map();
   }
 
-  createClass(Context, [{
+  _createClass(Context, [{
     key: 'addFlow',
     value: function addFlow(flow) {
       this.machine = xstate.Machine(flow);
-      this.data = reactBroadcast.createContext(this.machine.initialState.value);
+      this.data = React.createContext(this.machine.initialState.value);
     }
   }, {
     key: 'setChild',
@@ -125,26 +40,31 @@ var Context = function () {
       child && this.children.set(name, child);
     }
   }]);
+
   return Context;
 }();
 
 var context = new Context();
 
 var Machine = function (_React$Component) {
-  inherits(Machine, _React$Component);
+  _inherits(Machine, _React$Component);
 
   function Machine(props) {
-    classCallCheck(this, Machine);
+    var _this2 = this;
 
-    var _this = possibleConstructorReturn(this, (Machine.__proto__ || Object.getPrototypeOf(Machine)).call(this, props));
+    _classCallCheck(this, Machine);
 
-    _this.transition = function (_ref, condition, draftState) {
+    var _this = _possibleConstructorReturn(this, (Machine.__proto__ || _Object$getPrototypeOf(Machine)).call(this, props));
+
+    _this.transition = function (_ref) {
       var to = _ref.to,
           _ref$off = _ref.off,
           off = _ref$off === undefined ? '' : _ref$off,
-          data = _ref.data;
+          setState = _ref.setState,
+          draftState = _ref.draftState,
+          condition = _ref.condition;
 
-      console.log({ on: _this.state.route, to: to, data: data, condition: condition });
+      _this.props.log && console.log({ on: _this.state.route, to: to, setState: setState, draftState: draftState, condition: condition });
       var nextState = context.machine.transition(_this.state.route, to, condition);
       var doAction = function doAction(_ref2) {
         var route = _ref2.route;
@@ -155,7 +75,7 @@ var Machine = function (_React$Component) {
           var _iteratorError = undefined;
 
           try {
-            for (var _iterator = nextState.actions[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            for (var _iterator = _getIterator(nextState.actions), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
               var action = _step.value;
 
               context.children.get(route)[action] && context.children.get(route)[action]();
@@ -187,9 +107,9 @@ var Machine = function (_React$Component) {
         var _iteratorError2 = undefined;
 
         try {
-          for (var _iterator2 = off[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var flow = _step2.value;
-            filteredFlow.delete(flow);
+          for (var _iterator2 = _getIterator(off), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var _flow = _step2.value;
+            filteredFlow.delete(_flow);
           }
         } catch (err) {
           _didIteratorError2 = true;
@@ -211,7 +131,7 @@ var Machine = function (_React$Component) {
         return {
           route: nextState.value,
           flow: filteredFlow,
-          state: _extends({}, state.state, data),
+          state: _extends({}, state.state, setState),
           draftState: draftState
         };
       }, function () {
@@ -219,17 +139,32 @@ var Machine = function (_React$Component) {
       });
     };
 
-    _this.publish = function () {
-      return _this.setState(function (state) {
-        return { state: _extends({}, state.state, state.draftState) };
-      });
-    };
+    _this.publish = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee() {
+      return _regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return _this.transition;
+
+            case 2:
+              _this.setState(function (state) {
+                return { state: _extends({}, state.state, state.draftState), draftState: null };
+              });
+
+            case 3:
+            case 'end':
+              return _context.stop();
+          }
+        }
+      }, _callee, _this2);
+    }));
 
     context.addFlow(props.state.flow);
 
     _this.state = {
-      route: context.data.Provider.defaultValue,
-      flow: new Set([context.machine.initialState.value]),
+      route: context.data.defaultValue,
+      flow: new _Set([context.machine.initialState.value]),
       transition: _this.transition,
       state: _this.props.state.initialState,
       draftState: null,
@@ -238,7 +173,7 @@ var Machine = function (_React$Component) {
     return _this;
   }
 
-  createClass(Machine, [{
+  _createClass(Machine, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
       if (context.children.has(this.state.route)) {
@@ -247,7 +182,7 @@ var Machine = function (_React$Component) {
         var _iteratorError3 = undefined;
 
         try {
-          for (var _iterator3 = context.machine.initialState.actions[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          for (var _iterator3 = _getIterator(context.machine.initialState.actions), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
             var action = _step3.value;
 
             context.children.get(this.state.route)[action] && context.children.get(this.state.route)[action]();
@@ -281,30 +216,31 @@ var Machine = function (_React$Component) {
       );
     }
   }]);
+
   return Machine;
 }(React.Component);
 
 var State = function (_React$Component2) {
-  inherits(State, _React$Component2);
+  _inherits(State, _React$Component2);
 
   function State() {
-    var _ref3;
+    var _ref4;
 
-    var _temp, _this2, _ret;
+    var _temp, _this3, _ret;
 
-    classCallCheck(this, State);
+    _classCallCheck(this, State);
 
     for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this2 = possibleConstructorReturn(this, (_ref3 = State.__proto__ || Object.getPrototypeOf(State)).call.apply(_ref3, [this].concat(args))), _this2), _initialiseProps.call(_this2), _temp), possibleConstructorReturn(_this2, _ret);
+    return _ret = (_temp = (_this3 = _possibleConstructorReturn(this, (_ref4 = State.__proto__ || _Object$getPrototypeOf(State)).call.apply(_ref4, [this].concat(args))), _this3), _initialiseProps.call(_this3), _temp), _possibleConstructorReturn(_this3, _ret);
   }
 
-  createClass(State, [{
+  _createClass(State, [{
     key: 'render',
     value: function render() {
-      var _this3 = this;
+      var _this4 = this;
 
       var Consumer = context.data.Consumer;
 
@@ -312,28 +248,29 @@ var State = function (_React$Component2) {
       return React.createElement(
         Consumer,
         null,
-        function (_ref4) {
-          var flow = _ref4.flow,
-              transition = _ref4.transition,
-              publish = _ref4.publish,
-              state = _ref4.state;
+        function (_ref5) {
+          var flow = _ref5.flow,
+              transition = _ref5.transition,
+              publish = _ref5.publish,
+              state = _ref5.state;
 
-          var render = _this3.checkType(_this3.props.render, { transition: transition, state: state, publish: publish });
-          return flow.has(_this3.props.on) && render;
+          var render = _this4.checkType(_this4.props.render, { transition: transition, state: state, publish: publish });
+          return flow.has(_this4.props.on) && render;
         }
       );
     }
   }]);
+
   return State;
 }(React.Component);
 
 var _initialiseProps = function _initialiseProps() {
-  var _this4 = this;
+  var _this5 = this;
 
-  this.checkType = function (fn, _ref5) {
-    var _transition = _ref5.transition,
-        publish = _ref5.publish,
-        state = _ref5.state;
+  this.checkType = function (fn, _ref6) {
+    var _transition = _ref6.transition,
+        publish = _ref6.publish,
+        state = _ref6.state;
 
     var args = _extends({
       transition: function transition(to, options, cond) {
@@ -344,7 +281,7 @@ var _initialiseProps = function _initialiseProps() {
     var render = _extends({}, fn(args));
     if (render.type.prototype && render.type.prototype.isReactComponent) {
       render.ref = function (node) {
-        return context.setChild(node, _this4.props.on);
+        return context.setChild(node, _this5.props.on);
       };
     } else {
       console.warn('<State /> should not return stateless functions on render:', fn(args));

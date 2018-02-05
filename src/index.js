@@ -1,5 +1,4 @@
 import React from 'react'
-import { createContext } from 'react-broadcast';
 import { Machine as Xstate } from 'xstate'
 
 class Context {
@@ -11,7 +10,7 @@ class Context {
 
   addFlow(flow) {
     this.machine = Xstate(flow)
-    this.data =  createContext(this.machine.initialState.value);
+    this.data =  React.createContext(this.machine.initialState.value);
   }
 
   setChild(child, name) {
@@ -27,7 +26,7 @@ export class Machine extends React.Component {
     context.addFlow(props.state.flow)
 
     this.state = {
-      route: context.data.Provider.defaultValue,
+      route: context.data.defaultValue,
       flow: new Set([context.machine.initialState.value]),
       transition: this.transition,
       state: this.props.state.initialState,
@@ -44,8 +43,8 @@ export class Machine extends React.Component {
     }
   }
 
-  transition = ({to, off = '', data}, condition, draftState) => {
-    console.log({ on: this.state.route, to, data, condition })
+  transition = ({ to, off = '', setState, draftState, condition }) => {
+    this.props.log && console.log({ on: this.state.route, to, setState, draftState, condition })
     let nextState = context.machine.transition(this.state.route, to, condition)
     const doAction = ({ route }) => {
       if(context.children.has(route) && this.state.flow.has(this.state.route)) {
@@ -65,12 +64,15 @@ export class Machine extends React.Component {
     this.setState(state => ({
       route: nextState.value,
       flow: filteredFlow,
-      state: { ...state.state, ...data },
+      state: { ...state.state, ...setState },
       draftState
     }), () => doAction({ route: nextState.value }))
   }
 
-  publish = () => this.setState(state => ({ state: {...state.state, ...state.draftState}}))
+  publish = async () => {
+    await this.transition
+    this.setState(state => ({ state: {...state.state, ...state.draftState}, draftState: null }))
+  }
 
   render() {
     const { Provider } = context.data

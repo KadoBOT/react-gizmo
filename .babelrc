@@ -3,7 +3,9 @@
     ["env", {
       "modules": false
     }],
-    "react"
+    "react",
+    "es2017",
+    "es2015-rollup"
   ],
-  "plugins": ["external-helpers", "transform-object-rest-spread", "transform-es2015-destructuring", "transform-es2015-parameters", "transform-class-properties"]
+  "plugins": ["transform-runtime", "external-helpers", "transform-object-rest-spread", "transform-es2015-destructuring", "transform-es2015-parameters", "transform-class-properties"]
 }
