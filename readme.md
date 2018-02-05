@@ -84,13 +84,15 @@ states: {
 | render  | func | Used to pass State Machine props to a new React Component: `props => React.Component` |
 
 ### props.transition(state[,options])
-As the name suggests, this function is responsible for transitioning your app from one state to another. The first argument is the value of the state to be transitioned, and the second argument can receive a bunch of options. Like `off` to hide other non-actives &lt;State /&gt; components, `setState` to update your `state`/`initialState`, `draftState` which temporarily stores your changes until it's `publish`ed and `condition` where you can pass [xState Guards](http://davidkpiano.github.io/xstate/docs/#/guides/guards)
+As the name suggests, this function is responsible for transitioning your app from one state to another. The first argument is the value of the state to be transitioned, and the second argument can receive a bunch of options. Like `off` to hide other non-actives &lt;State /&gt; components, `setState` to update your `state`/`initialState`, `draftState` which temporarily stores your changes until it's `publish`ed and `condition` where you can pass [xState Guards](http://davidkpiano.github.io/xstate/docs/#/guides/guards)  
+  
 | Option | Type | Description |
 | ------ | ---- | ----------- |
 | off    | oneOfType(string, arrayOf(string)) | Component(s) that will be turned 'off' when transition is called |
 |  setState | object | Mutates `initialState` keys with passed values |
 |  draftState | object | Like `setState`, but changes take effect only after being published. Newer `draftState`s will replace unpublished ones. |
-| condition | any | Check xState Contitional Transitions ([Guards](http://davidkpiano.github.io/xstate/docs/#/guides/guards))
+| condition | any | Check xState Contitional Transitions ([Guards](http://davidkpiano.github.io/xstate/docs/#/guides/guards))  
+
 ```js
 props.transition('NEXT', {
   off: 'end',
