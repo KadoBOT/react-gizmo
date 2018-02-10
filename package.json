@@ -1,6 +1,6 @@
 {
   "name": "react-gizmo",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "React Gizmo - Finite State Machine for React",
   "main": "bundle.js",
   "style": "src/graph.css",
