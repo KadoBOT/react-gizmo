@@ -1,0 +1,78 @@
+* {
+  box-sizing: border-box;
+  position: relative;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+.gizmo__wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.gizmo__graph {
+  display: flex;
+  width: 100vw;
+  justify-content: space-around;
+}
+
+.gizmo__container {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  height: 100vh;
+  flex: 0.5;
+  border-right: 3px solid rgba(128, 128, 128, 0.3);
+  background: #424242;
+}
+
+.gizmo__editor {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 33%;
+
+  > textarea {
+    flex-grow: 1;
+    font-family: Monaco, monospace;
+    font-size: 16px;
+    background: #161818;
+    color: #fefefe;
+    line-height: 1.2;
+  }
+}
+
+.gizmo__button {
+  -webkit-appearance: none;
+  padding: 1rem;
+  background: blue;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 12px;
+  border: none;
+  background-color: #ff3cac;
+  background-image: linear-gradient(
+    135deg,
+    #ff3cac 0%,
+    #784ba0 50%,
+    #2b86c5 100%
+  );
+  transition: opacity ease-out 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+#gizmo__cy {
+  // width: 50vw;
+  height: 100vh;
+  flex-grow: 1;
+}
