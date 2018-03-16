@@ -27,6 +27,7 @@ export class Machine extends React.Component {
 	constructor(props) {
 		super(props);
 		context.addFlow(props.state.flow);
+		console.log(context.data._defaultValue);
 
 		this.state = {
 			route: context.data._defaultValue,
