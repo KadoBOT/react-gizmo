@@ -29,7 +29,7 @@ export class Machine extends React.Component {
 		context.addFlow(props.state.flow);
 
 		this.state = {
-			route: context.data.defaultValue,
+			route: context.data._defaultValue,
 			flow: new Set([context.machine.initialState.value]),
 			transition: this.transition,
 			state: this.props.state.initialState,

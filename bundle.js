@@ -375,7 +375,7 @@ var Machine = function (_React$Component) {
 		context.addFlow(props.state.flow);
 
 		_this.state = {
-			route: context.data.defaultValue,
+			route: context.data._defaultValue,
 			flow: new _Set([context.machine.initialState.value]),
 			transition: _this.transition,
 			state: _this.props.state.initialState,
