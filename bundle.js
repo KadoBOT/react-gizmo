@@ -438,9 +438,9 @@ var Machine = function (_React$Component) {
 					React.createElement(
 						Provider,
 						{ value: this.state },
-						React.cloneElement(this.props.children, {
+						React.cloneElement(this.props.children, _extends({
 							route: this.state.route
-						})
+						}, this.state.state))
 					)
 				)
 			) : React.createElement(

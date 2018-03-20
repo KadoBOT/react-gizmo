@@ -128,7 +128,8 @@ export class Machine extends React.Component {
 				<div className="gizmo__wrapper">
 					<Provider value={this.state}>
 						{React.cloneElement(this.props.children, {
-							route: this.state.route
+							route: this.state.route,
+							...this.state.state
 						})}
 					</Provider>
 				</div>
