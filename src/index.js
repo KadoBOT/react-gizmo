@@ -137,7 +137,8 @@ export class Machine extends React.Component {
 		) : (
 			<Provider value={this.state}>
 				{React.cloneElement(this.props.children, {
-					route: this.state.route
+					route: this.state.route,
+					...this.state.state
 				})}
 			</Provider>
 		);
