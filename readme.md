@@ -19,59 +19,79 @@ yarn add react-gizmo
 ### PS: `react-gizmo` uses new React Context API. React 16.3 is needed for this library to work.
 
 ```js
-import React from "react";
-import ReactDOM from "react-dom";
 import { Machine, State } from "react-gizmo";
 
 const state = {
-  initialState: { text: "Hello" },
-  flow: {
-    initial: "start",
-    states: {
-      start: { on: { NEXT: "end" } },
-      end: { on: { NEXT: "start" } }
-    }
-  }
+	initialState: { text: "Next" },
+	flow: {
+		initial: "start",
+		states: {
+			start: { on: { NEXT: "end" } },
+			end: { on: { PREV: "start" } }
+		}
+	}
 };
 
 const MachineApp = () => (
-  <Machine log state={state}>
-    <React.Fragment>
-      <State
-        on="start"
-        render={props => (
-          <button
-            onClick={() =>
-              props.transition("NEXT", {
-                off: "start",
-                setState: { text: "World" }
-              })
-            }
-          >
-            {props.text}
-          </button>
-        )}
-      />
-      <State
-        on="end"
-        render={props => (
-          <button
-            onClick={() =>
-              props.transition("NEXT", {
-                off: "end",
-                setState: { text: "Hello" }
-              })
-            }
-          >
-            {props.text}
-          </button>
-        )}
-      />
-    </React.Fragment>
-  </Machine>
+	<Machine log state={state}>
+		<App />
+	</Machine>
 );
 
 ReactDOM.render(<MachineApp />, document.getElementById("root"));
+```
+
+App.js
+
+```js
+class App extends Component {
+	render() {
+		return (
+			<React.Fragment>
+				<State on="start">
+					<ButtonStart />
+				</State>
+				<State on="end">
+					<ButtonEnd />
+				</State>
+			</React.Fragment>
+		);
+	}
+}
+```
+
+ButtonStart.js
+
+```js
+class ButtonNext extends Component {
+	handleOnClick = () => {
+		this.props.transition("NEXT", {
+			off: "start",
+			setState: { text: "Prev" }
+		});
+	};
+
+	render() {
+		return <button onClick={this.handleOnClick}>{this.props.text}</button>;
+	}
+}
+```
+
+ButtonPrev.js
+
+```js
+class ButtonPrev extends Component {
+	handleOnClick = () => {
+		this.props.transition("PREV", {
+			off: "end",
+			setState: { text: "Next" }
+		});
+	};
+
+	render() {
+		return <button onClick={this.handleOnClick}>{props.text}</button>;
+	}
+}
 ```
 
 # API
@@ -88,23 +108,26 @@ The &lt;Machine /&gt; wraps your App and is responsible for passing down the pro
 
 ## &lt;State /&gt;
 
-The &lt;State /&gt; represents the individual state of your flow. `on` prop is what glues the state to a specific flow state, and the `render` prop returns a function with the machine props. The `render` of &lt;State /&gt; must return a component. It's recommended that the `render` function returns Class based components since only Class based components can have it's methods called by the Machine on state transitions.
+The &lt;State /&gt; represents the individual state of your flow. `on` prop is what glues the state to a specific flow state, and the `children` prop returns a function with the machine props. It's recommended to use class based component for the `children` of the State so it can be referenced by the Machine.
 
 ```js
 ...
 states: {
   start: { on: {  NEXT: 'end' }},
-  end: { on: { NEXT: 'start' }}
+  end: { on: { PREV: 'start' }}
 }
 ...
-<State on="start" render={props => ...
-<State on="end" render={props => ...
+<State on="start">
+  <PageOne />
+</State>
+<State on="end">
+  <PageTwo />
+</State>
 ```
 
-| Prop   | Type   | Description                                                                           |
-| ------ | ------ | ------------------------------------------------------------------------------------- |
-| on     | string | Component that will be turned 'on' when flow transitions to a state with same name    |
-| render | func   | Used to pass State Machine props to a new React Component: `props => React.Component` |
+| Prop | Type   | Description                                                                        |
+| ---- | ------ | ---------------------------------------------------------------------------------- |
+| on   | string | Component that will be turned 'on' when flow transitions to a state with same name |
 
 ### props.transition(state[,options])
 
@@ -119,14 +142,14 @@ As the name suggests, this function is responsible for transitioning your app fr
 
 ```js
 props.transition("NEXT", {
-  off: "end",
-  setState: {
-    text: "Will be updated"
-  },
-  draftState: {
-    text: "Will update again, but only after publish"
-  },
-  condition: { shouldTransition: this.text.length < 99 }
+	off: "end",
+	setState: {
+		text: "Will be updated"
+	},
+	draftState: {
+		text: "Will update again, but only after publish"
+	},
+	condition: { shouldTransition: this.text.length < 99 }
 });
 ```
 
@@ -151,11 +174,10 @@ console.log(this.props.text); // Hello
 
 # Todo
 
-* [ ] Connect state to Redux DevTools
-* [ ] Flow visualisation
-* [ ] Examples
-* [ ] Better integration with other State Managers like Redux and Mobx ie.
-* [ ] Tests
+*   [ ] Connect state to Redux DevTools
+*   [ ] Examples
+*   [ ] Better integration with other State Managers like Redux and Mobx ie.
+*   [ ] Tests
 
 # Thanks
 
