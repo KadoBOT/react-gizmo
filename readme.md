@@ -4,7 +4,7 @@ UI Finite State Machine for React
 
 ![Gizmo](https://78.media.tumblr.com/7e86a0e90f263f2c1da0bc2f01b91d9a/tumblr_of8yz2A9Tk1rp0vkjo1_500.gif)
 
-#### React Gizmo is a cute State Machine that doesn't become a monster if you throw water on it
+#### React Gizmo is a cute State Machine that doesn't become a monster if you feed it after midnight
 
 # Quick Start
 
